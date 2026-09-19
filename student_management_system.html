@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .student-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #444;
+        }
+
+        input {
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #667eea;
+            color: white;
+        }
+
+        td input {
+            width: 100px;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5368d5;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f5f5f5;
+        }
+
+        .result h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .result p {
+            font-size: 17px;
+            margin: 10px 0;
+        }
+
+        .pass {
+            color: green;
+            font-weight: bold;
+            font-size: 22px;
+        }
+
+        .fail {
+            color: red;
+            font-weight: bold;
+            font-size: 22px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            td input {
+                width: 70px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎓 Student Management System</h1>
+
+        <div class="student-info">
+
+            <div class="input-group">
+                <label>Student Name</label>
+                <input type="text" id="studentName" placeholder="Enter student name">
+            </div>
+
+            <div class="input-group">
+                <label>Roll Number</label>
+                <input type="text" id="rollNumber" placeholder="Enter roll number">
+            </div>
+
+        </div>
+
+        <table>
+            <tr>
+                <th>S.No</th>
+                <th>Subject</th>
+                <th>Marks</th>
+            </tr>
+
+            <tr>
+                <td>1</td>
+                <td>English</td>
+                <td><input type="number" id="sub1" min="0" max="100"></td>
+            </tr>
+
+            <tr>
+                <td>2</td>
+                <td>Mathematics</td>
+                <td><input type="number" id="sub2" min="0" max="100"></td>
+            </tr>
+
+            <tr>
+                <td>3</td>
+                <td>Science</td>
+                <td><input type="number" id="sub3" min="0" max="100"></td>
+            </tr>
+
+            <tr>
+                <td>4</td>
+                <td>Social</td>
+                <td><input type="number" id="sub4" min="0" max="100"></td>
+            </tr>
+
+            <tr>
+                <td>5</td>
+                <td>Computer</td>
+                <td><input type="number" id="sub5" min="0" max="100"></td>
+            </tr>
+        </table>
+
+        <button onclick="calculateResult()">Calculate Result</button>
+
+        <div class="result" id="result">
+
+            <h2>📊 Student Result</h2>
+
+            <p><strong>Name:</strong> <span id="displayName"></span></p>
+
+            <p><strong>Roll Number:</strong> <span id="displayRoll"></span></p>
+
+            <p><strong>Total Marks:</strong> <span id="total"></span> / 500</p>
+
+            <p><strong>Average:</strong> <span id="average"></span>%</p>
+
+            <p><strong>Subjects Passed:</strong> <span id="passed"></span> / 5</p>
+
+            <p><strong>Subjects Failed:</strong> <span id="failed"></span> / 5</p>
+
+            <p><strong>Result:</strong> <span id="status"></span></p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function calculateResult() {
+
+            let name = document.getElementById("studentName").value;
+            let roll = document.getElementById("rollNumber").value;
+
+            let marks = [
+                Number(document.getElementById("sub1").value),
+                Number(document.getElementById("sub2").value),
+                Number(document.getElementById("sub3").value),
+                Number(document.getElementById("sub4").value),
+                Number(document.getElementById("sub5").value)
+            ];
+
+            if (name === "" || roll === "") {
+                alert("Please enter Student Name and Roll Number");
+                return;
+            }
+
+            for (let mark of marks) {
+                if (mark < 0 || mark > 100 || isNaN(mark)) {
+                    alert("Please enter valid marks between 0 and 100");
+                    return;
+                }
+            }
+
+            let total = 0;
+            let passed = 0;
+            let failed = 0;
+
+            for (let mark of marks) {
+
+                total += mark;
+
+                if (mark >= 35) {
+                    passed++;
+                } else {
+                    failed++;
+                }
+            }
+
+            let average = total / 5;
+
+            let status = "";
+
+            if (failed === 0) {
+                status = "PASS";
+            } else {
+                status = "FAIL";
+            }
+
+            document.getElementById("displayName").innerText = name;
+            document.getElementById("displayRoll").innerText = roll;
+            document.getElementById("total").innerText = total;
+            document.getElementById("average").innerText = average.t
+            oFixed(2);
+            document.getElementById("passed").innerText = passed;
+            document.getElementById("failed").innerText = failed;
+
+            let statusElement = document.getElementById("status");
+            statusElement.innerText = status;
+
+            if (status === "PASS") {
+                statusElement.className = "pass";
+            } else {
+                statusElement.className = "fail";
+            }
+
+            document.getElementById("result").style.display = "block";
+        }
+
+    </script>
+
+</body>
+</html>
